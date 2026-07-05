@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Admin Panel - SnackZone</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="brand">🍔 Snack<span>Zone</span> — Admin Panel</div>
+        <button class="admin-logout-btn" id="logoutBtn">🚪 Logout</button>
+    </header>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-nav-item active" data-panel="dashboard">
+                <span class="nav-icon">📊</span><span>Dashboard</span>
+            </div>
+            <div class="admin-nav-item" data-panel="products">
+                <span class="nav-icon">🍽️</span><span>Products</span>
+            </div>
+            <div class="admin-nav-item" data-panel="orders">
+                <span class="nav-icon">📋</span><span>Orders</span>
+            </div>
+            <div class="admin-nav-item" data-panel="payment">
+                <span class="nav-icon">💳</span><span>Payment</span>
+            </div>
+            <div class="admin-nav-item" data-panel="add-order">
+                <span class="nav-icon">➕</span><span>Add Order</span>
+            </div>
+            <div class="admin-nav-item" data-panel="users">
+                <span class="nav-icon">👥</span><span>Users</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-content">
+
+            <!-- Dashboard -->
+            <div class="admin-panel active" id="panel-dashboard">
+                <h1>📊 Dashboard</h1>
+                <p class="page-desc">Overview of your cafeteria operations</p>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card orange"><div class="stat-icon">📋</div><div class="stat-value" id="statOrders">—</div><div class="stat-label">Total Orders</div></div>
+                    <div class="stat-card red"><div class="stat-icon">⏳</div><div class="stat-value" id="statPending">—</div><div class="stat-label">Pending Orders</div></div>
+                    <div class="stat-card blue"><div class="stat-icon">🍽️</div><div class="stat-value" id="statProducts">—</div><div class="stat-label">Products</div></div>
+                    <div class="stat-card green"><div class="stat-icon">💰</div><div class="stat-value" id="statRevenue">—</div><div class="stat-label">Revenue (₹)</div></div>
+                    <div class="stat-card blue"><div class="stat-icon">👥</div><div class="stat-value" id="statUsers">—</div><div class="stat-label">Users</div></div>
+                </div>
+                <div class="admin-table-wrap">
+                    <div class="table-header">
+                        <h3>🕐 Recent Orders</h3>
+                        <button class="btn btn-sm btn-primary" onclick="switchPanel('orders')">View All →</button>
+                    </div>
+                    <div id="recentOrdersTable" class="table-scroll"><p style="padding:20px;color:var(--gray);">Loading...</p></div>
+                </div>
+            </div>
+
+            <!-- Products -->
+            <div class="admin-panel" id="panel-products">
+                <h1>🍽️ Manage Products</h1>
+                <p class="page-desc">Add, edit, or remove items from the cafeteria menu</p>
+
+                <!-- Add Product Form -->
+                <div class="add-product-form">
+                    <h3>➕ Add New Product</h3>
+                    <div id="productAlert" class="alert"></div>
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Product Name *</label>
+                            <input type="text" id="pName" placeholder="e.g. Samosa">
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="pCategory">
+                                <option value="Snacks">Snacks</option>
+                                <option value="Beverages">Beverages</option>
+                                <option value="Meals">Meals</option>
+                                <option value="Desserts">Desserts</option>
+                                <option value="Combos">Combos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₹) *</label>
+                            <input type="number" id="pPrice" placeholder="e.g. 20" min="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="pDesc" placeholder="Short description of the item">
+                    </div>
+                    <div class="form-group">
+                        <label>Choose Emoji Icon</label>
+                        <div class="emoji-picker" id="emojiPicker"></div>
+                        <input type="hidden" id="pEmoji" value="🍽️">
+                    </div>
+                    <button class="btn btn-primary" id="addProductBtn">➕ Add Product</button>
+                </div>
+
+                <!-- Products Table -->
+                <div class="admin-table-wrap">
+                    <div class="table-header">
+                        <h3>All Products</h3>
+                        <button class="btn btn-sm btn-outline" onclick="loadProducts()">🔄 Refresh</button>
+                    </div>
+                    <div id="productsTableWrap" class="table-scroll"><p style="padding:20px;color:var(--gray);">Loading...</p></div>
+                </div>
+            </div>
+
+            <!-- Orders -->
+            <div class="admin-panel" id="panel-orders">
+                <h1>📋 All Orders</h1>
+                <p class="page-desc">View and manage customer orders</p>
+                <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+                    <button class="cat-tab active" data-filter="all" onclick="filterOrders(this,'all')">All</button>
+                    <button class="cat-tab" data-filter="PENDING" onclick="filterOrders(this,'PENDING')">⏳ Pending</button>
+                    <button class="cat-tab" data-filter="CONFIRMED" onclick="filterOrders(this,'CONFIRMED')">✅ Confirmed</button>
+                    <button class="cat-tab" data-filter="READY" onclick="filterOrders(this,'READY')">🍽️ Ready</button>
+                    <button class="cat-tab" data-filter="PAID" onclick="filterOrders(this,'PAID')">💰 Paid</button>
+                    <button class="cat-tab" data-filter="REJECTED" onclick="filterOrders(this,'REJECTED')">❌ Rejected</button>
+                    <button class="btn btn-sm btn-outline" onclick="loadOrders()">🔄 Refresh</button>
+                </div>
+                <div class="admin-table-wrap">
+                    <div id="ordersTableWrap" class="table-scroll"><p style="padding:20px;color:var(--gray);">Loading...</p></div>
+                </div>
+            </div>
+
+            <!-- Payment Settings -->
+            <div class="admin-panel" id="panel-payment">
+                <h1>💳 Payment Settings</h1>
+                <p class="page-desc">Set your UPI ID and upload a QR code for customers to scan</p>
+                <div id="paymentAlert" class="alert"></div>
+                <div class="payment-settings-wrap">
+                    <!-- QR Upload -->
+                    <div class="payment-card">
+                        <h3>📷 UPI QR Code</h3>
+                        <div class="qr-upload-area" onclick="document.getElementById('qrFileInput').click()">
+                            <img id="qrPreviewImg" src="" alt="" style="display:none;">
+                            <div id="qrUploadPlaceholder">
+                                <div class="qr-upload-icon">📷</div>
+                                <div class="qr-upload-text">Click to upload QR code image<br><small>PNG, JPG up to 2MB</small></div>
+                            </div>
+                        </div>
+                        <input type="file" id="qrFileInput" accept="image/*">
+                        <p style="font-size:12px;color:var(--gray);text-align:center;">Upload the QR code from your UPI app (Google Pay, PhonePe, etc.)</p>
+                    </div>
+
+                    <!-- UPI Details -->
+                    <div class="payment-card">
+                        <h3>🏦 UPI Details</h3>
+                        <div class="form-group">
+                            <label>UPI ID *</label>
+                            <input type="text" id="upiIdInput" placeholder="e.g. yourname@paytm or 9876543210@upi">
+                        </div>
+                        <div class="form-group">
+                            <label>Display Name</label>
+                            <input type="text" id="upiNameInput" placeholder="e.g. SnackZone Cafeteria">
+                        </div>
+                        <div class="upi-preview" id="upiPreview">
+                            Preview: <span id="upiPreviewText"></span>
+                        </div>
+                        <button class="btn btn-primary" id="savePaymentBtn" style="width:100%;margin-top:20px;">
+                            💾 Save Payment Settings
+                        </button>
+                        <div style="margin-top:20px;padding:16px;background:#f0f9f0;border-radius:10px;font-size:13px;">
+                            <strong>✅ Current settings:</strong>
+                            <p id="currentPaymentInfo" style="color:var(--gray);margin-top:6px;">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Order -->
+            <div class="admin-panel" id="panel-add-order">
+                <h1>➕ Add Order</h1>
+                <p class="page-desc">Place a manual order on behalf of an employee</p>
+
+                <div class="add-product-form" style="max-width:680px;">
+                    <h3>📝 New Order</h3>
+                    <div id="addOrderAlert" class="alert"></div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Customer Name *</label>
+                            <input type="text" id="oName" placeholder="Employee name">
+                        </div>
+                        <div class="form-group">
+                            <label>Customer Email</label>
+                            <input type="email" id="oEmail" placeholder="employee@company.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Items *</label>
+                        <div id="orderItemPicker" style="border:2px solid #eaddd0;border-radius:11px;padding:14px;max-height:280px;overflow-y:auto;background:#fffaf6;">
+                            <p style="color:var(--gray);font-size:13px;">Loading products...</p>
+                        </div>
+                    </div>
+
+                    <!-- Selected items summary -->
+                    <div id="orderSummaryWrap" style="display:none;margin:16px 0;background:#fff3e0;border-radius:11px;padding:14px;border:2px solid #fde0c0;">
+                        <strong style="font-size:14px;">🛒 Order Summary</strong>
+                        <div id="orderSummaryList" style="margin-top:10px;"></div>
+                        <div style="border-top:2px dashed #fbd5a5;margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;font-weight:700;font-size:16px;">
+                            <span>Total</span>
+                            <span style="color:var(--primary);">₹<span id="orderSummaryTotal">0</span></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Payment Status</label>
+                            <select id="oStatus" style="width:100%;padding:11px 14px;border:2px solid #eaddd0;border-radius:11px;font-family:inherit;font-size:14px;">
+                                <option value="PENDING">⏳ Pending</option>
+                                <option value="CONFIRMED">✅ Confirmed</option>
+                                <option value="PAID">💰 Paid</option>
+                                <option value="READY">🍽️ Ready</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>UTR / Ref No. <span style="font-weight:400;color:#aaa;">(optional)</span></label>
+                            <input type="text" id="oUtr" placeholder="Payment reference">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="placeAdminOrderBtn" style="padding:13px 32px;font-size:15px;">
+                        ✅ Place Order
+                    </button>
+                </div>
+            </div>
+
+            <!-- Users -->
+            <div class="admin-panel" id="panel-users">
+                <h1>👥 Users</h1>
+                <p class="page-desc">All registered users</p>
+                <div class="admin-table-wrap">
+                    <div class="table-header">
+                        <h3>Registered Users</h3>
+                    </div>
+                    <div id="usersTableWrap" class="table-scroll"><p style="padding:20px;color:var(--gray);">Loading...</p></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // ─── Panel Navigation ───────────────────────────────────────
+        function switchPanel(name) {
+            document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('panel-' + name).classList.add('active');
+            document.querySelector(`[data-panel="${name}"]`).classList.add('active');
+            if (name === 'dashboard')  loadDashboard();
+            if (name === 'products')   loadProducts();
+            if (name === 'orders')     loadOrders();
+            if (name === 'payment')    loadPaymentSettings();
+            if (name === 'add-order')  loadAddOrderPanel();
+            if (name === 'users')      loadUsers();
+        }
+
+        document.querySelectorAll('.admin-nav-item').forEach(item => {
+            item.addEventListener('click', () => switchPanel(item.dataset.panel));
+        });
+
+        // ─── Logout ─────────────────────────────────────────────────
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            const r = await fetch('/api/logout', { method: 'POST' });
+            const j = await r.json();
+            window.location.href = j.redirect || '/login';
+        });
+
+        // ─── Helpers ─────────────────────────────────────────────────
+        function showPanelAlert(id, msg, type = 'error') {
+            const box = document.getElementById(id);
+            box.textContent = msg;
+            box.className = `alert show ${type}`;
+            setTimeout(() => box.classList.remove('show'), 4000);
+        }
+
+        function statusBadge(s) {
+            return `<span class="status-badge ${s.toLowerCase()}">${s}</span>`;
+        }
+
+        async function apiPost(url, data) {
+            const r = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            return r.json();
+        }
+
+        // ─── Safe items helper ────────────────────────────────────────
+        // items can arrive as an Array OR as a JSON string — handle both
+        function safeItems(raw) {
+            if (!raw) return [];
+            if (Array.isArray(raw)) return raw;
+            try { return JSON.parse(raw); } catch(e) { return []; }
+        }
+
+        function itemsLabel(raw) {
+            const items = safeItems(raw);
+            if (!items.length) return '—';
+            return items.map(i => `${i.emoji||'🍽️'} ${i.name||'?'} ×${i.qty||1}`).join(', ');
+        }
+
+        // ─── Dashboard ───────────────────────────────────────────────
+        async function loadDashboard() {
+            try {
+                const r = await fetch('/api/admin/stats');
+                const d = await r.json();
+                if (d.success) {
+                    const s = d.stats;
+                    document.getElementById('statOrders').textContent   = s.total_orders;
+                    document.getElementById('statPending').textContent  = s.pending_orders;
+                    document.getElementById('statProducts').textContent = s.total_products;
+                    document.getElementById('statUsers').textContent    = s.total_users;
+                    document.getElementById('statRevenue').textContent  = '₹' + s.total_revenue;
+                }
+            } catch(e) { console.error('stats error', e); }
+
+            try {
+                const or = await fetch('/api/admin/orders');
+                const od = await or.json();
+                if (od.success) renderRecentOrders(od.orders.slice(0, 5));
+                else document.getElementById('recentOrdersTable').innerHTML =
+                    '<p style="padding:16px;color:red;">API error: ' + (od.message||'unknown') + '</p>';
+            } catch(e) {
+                document.getElementById('recentOrdersTable').innerHTML =
+                    '<p style="padding:16px;color:red;">Could not load orders: ' + e.message + '</p>';
+            }
+        }
+
+        function renderRecentOrders(orders) {
+            const el = document.getElementById('recentOrdersTable');
+            if (!orders || !orders.length) {
+                el.innerHTML = '<p style="padding:16px;color:var(--gray);">No orders yet</p>';
+                return;
+            }
+            let html = `<div class="table-scroll"><table>
+                <thead><tr><th>ID</th><th>User</th><th>Items</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead>
+                <tbody>`;
+            orders.forEach(o => {
+                try {
+                    html += `<tr>
+                        <td><strong>#${o.order_id}</strong></td>
+                        <td>${o.user_name||'—'}<br><small style="color:var(--gray)">${o.user_email||''}</small></td>
+                        <td style="font-size:12px;max-width:200px;">${itemsLabel(o.items)}</td>
+                        <td><strong>₹${o.amount||0}</strong></td>
+                        <td>${statusBadge(o.status||'PENDING')}</td>
+                        <td style="font-size:12px;color:var(--gray);">${o.created_at||''}</td>
+                    </tr>`;
+                } catch(e) { console.warn('row error', e, o); }
+            });
+            html += '</tbody></table></div>';
+            el.innerHTML = html;
+        }
+
+        // ─── Products ────────────────────────────────────────────────
+        const EMOJIS = ['🍔','🌮','🥗','🍕','🥪','🍜','🍛','🥘','🍱','🧆','🥟',
+                        '🧇','🥞','🍩','🍪','🧁','🎂','🍫','🍬','🧃','☕','🥤',
+                        '🍵','🧋','🥛','🍺','🥐','🍞','🧀','🥚','🍳','🥓','🌽','🥕'];
+
+        function buildEmojiPicker() {
+            const picker = document.getElementById('emojiPicker');
+            EMOJIS.forEach(em => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'emoji-opt';
+                btn.textContent = em;
+                btn.onclick = () => {
+                    picker.querySelectorAll('.emoji-opt').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    document.getElementById('pEmoji').value = em;
+                };
+                picker.appendChild(btn);
+            });
+            // Select first by default
+            picker.querySelector('.emoji-opt').classList.add('selected');
+        }
+
+        async function loadProducts() {
+            const r = await fetch('/api/products');
+            const d = await r.json();
+            if (!d.success) return;
+            const products = d.products;
+            if (!products.length) {
+                document.getElementById('productsTableWrap').innerHTML = '<p style="padding:20px;color:var(--gray);">No products yet. Add one above.</p>';
+                return;
+            }
+            let html = `<table>
+                <thead><tr><th>Emoji</th><th>Name</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>`;
+            products.forEach(p => {
+                html += `<tr>
+                    <td style="font-size:28px;text-align:center;">${p.emoji}</td>
+                    <td><strong>${p.name}</strong><br><small style="color:var(--gray);">${p.description||''}</small></td>
+                    <td><span style="background:#fff3e0;color:var(--primary);padding:4px 10px;border-radius:10px;font-size:12px;font-weight:600;">${p.category}</span></td>
+                    <td><strong>₹${p.price}</strong></td>
+                    <td>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                            <input type="checkbox" ${p.available ? 'checked' : ''}
+                                onchange="toggleProduct(${p.id}, this.checked)"
+                                style="width:16px;height:16px;">
+                            <span style="font-size:13px;">${p.available ? 'Available' : 'Unavailable'}</span>
+                        </label>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${p.id}, '${p.name.replace(/'/g,"\\'")}')">🗑 Delete</button>
+                    </td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('productsTableWrap').innerHTML = html;
+        }
+
+        document.getElementById('addProductBtn').addEventListener('click', async () => {
+            const name     = document.getElementById('pName').value.trim();
+            const category = document.getElementById('pCategory').value;
+            const price    = document.getElementById('pPrice').value;
+            const desc     = document.getElementById('pDesc').value.trim();
+            const emoji    = document.getElementById('pEmoji').value;
+
+            if (!name || !price) { showPanelAlert('productAlert', 'Name and price are required'); return; }
+
+            const btn = document.getElementById('addProductBtn');
+            btn.textContent = 'Adding...'; btn.disabled = true;
+
+            const r = await apiPost('/api/admin/products', { name, category, price, description: desc, emoji });
+            btn.textContent = '➕ Add Product'; btn.disabled = false;
+
+            if (r.success) {
+                showPanelAlert('productAlert', r.message, 'success');
+                document.getElementById('pName').value = '';
+                document.getElementById('pPrice').value = '';
+                document.getElementById('pDesc').value = '';
+                loadProducts();
+            } else {
+                showPanelAlert('productAlert', r.message);
+            }
+        });
+
+        async function toggleProduct(id, available) {
+            await apiPost(`/api/admin/products/${id}/toggle`, { available });
+            showPanelAlert('productAlert', `Product ${available ? 'enabled' : 'disabled'}`, 'success');
+        }
+
+        async function deleteProduct(id, name) {
+            if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+            const r = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
+            const d = await r.json();
+            if (d.success) { showPanelAlert('productAlert', d.message, 'success'); loadProducts(); }
+        }
+
+        // ─── Orders ──────────────────────────────────────────────────
+        let allOrders = [];
+        let currentFilter = 'all';
+
+        async function loadOrders() {
+            document.getElementById('ordersTableWrap').innerHTML =
+                '<p style="padding:20px;color:var(--gray);">Loading...</p>';
+            try {
+                const r = await fetch('/api/admin/orders');
+                const d = await r.json();
+                if (d.success) {
+                    allOrders = d.orders;
+                    renderOrdersTable();
+                } else {
+                    document.getElementById('ordersTableWrap').innerHTML =
+                        '<p style="padding:20px;color:red;">Error: ' + (d.message||'unknown') + '</p>';
+                }
+            } catch(e) {
+                document.getElementById('ordersTableWrap').innerHTML =
+                    '<p style="padding:20px;color:red;">Network error: ' + e.message + '</p>';
+            }
+        }
+
+        function filterOrders(btn, filter) {
+            currentFilter = filter;
+            document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderOrdersTable();
+        }
+
+        function renderOrdersTable() {
+            const el = document.getElementById('ordersTableWrap');
+            const orders = currentFilter === 'all'
+                ? allOrders
+                : allOrders.filter(o => (o.status||'').toUpperCase() === currentFilter);
+
+            if (!orders || !orders.length) {
+                el.innerHTML = '<p style="padding:20px;color:var(--gray);">No orders found</p>';
+                return;
+            }
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Customer</th><th>Items</th>
+                        <th>Amount</th><th>UTR</th><th>Status</th>
+                        <th>Update</th><th>Time</th>
+                    </tr>
+                </thead><tbody>`;
+
+            orders.forEach(o => {
+                try {
+                    const status = (o.status || 'PENDING').toUpperCase();
+                    html += `<tr>
+                        <td><strong>#${o.order_id}</strong></td>
+                        <td>
+                            <strong>${o.user_name||'—'}</strong><br>
+                            <small style="color:var(--gray);font-size:11px;">${o.user_email||''}</small>
+                        </td>
+                        <td style="font-size:12px;max-width:200px;">${itemsLabel(o.items)}</td>
+                        <td><strong style="color:var(--primary);">₹${o.amount||0}</strong></td>
+                        <td style="font-size:12px;color:var(--gray);">${o.utr||'—'}</td>
+                        <td>${statusBadge(status)}</td>
+                        <td>
+                            <select onchange="updateOrderStatus(${o.order_id}, this.value)"
+                                style="padding:6px 10px;border-radius:8px;border:2px solid #eaddd0;
+                                       font-family:inherit;font-size:13px;cursor:pointer;min-width:130px;">
+                                <option value="PENDING"   ${status==='PENDING'   ?'selected':''}>⏳ Pending</option>
+                                <option value="CONFIRMED" ${status==='CONFIRMED' ?'selected':''}>✅ Confirmed</option>
+                                <option value="READY"     ${status==='READY'     ?'selected':''}>🍽️ Ready</option>
+                                <option value="PAID"      ${status==='PAID'      ?'selected':''}>💰 Paid</option>
+                                <option value="REJECTED"  ${status==='REJECTED'  ?'selected':''}>❌ Rejected</option>
+                            </select>
+                        </td>
+                        <td style="font-size:11px;color:var(--gray);white-space:nowrap;">${o.created_at||''}</td>
+                    </tr>`;
+                } catch(e) { console.warn('row render error', e, o); }
+            });
+
+            html += '</tbody></table>';
+            el.innerHTML = html;
+        }
+
+        async function updateOrderStatus(orderId, status) {
+            await apiPost(`/api/admin/orders/${orderId}/status`, { status });
+            await loadOrders();
+        }
+
+        // ─── Payment Settings ────────────────────────────────────────
+        let qrBase64 = '';
+
+        document.getElementById('qrFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) { showPanelAlert('paymentAlert', 'Image must be under 2MB'); return; }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                qrBase64 = ev.target.result;
+                const img = document.getElementById('qrPreviewImg');
+                img.src = qrBase64;
+                img.style.display = 'block';
+                document.getElementById('qrUploadPlaceholder').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('upiIdInput').addEventListener('input', () => {
+            const val = document.getElementById('upiIdInput').value.trim();
+            const name = document.getElementById('upiNameInput').value.trim();
+            const preview = document.getElementById('upiPreview');
+            const text = document.getElementById('upiPreviewText');
+            if (val) {
+                preview.style.display = 'block';
+                text.textContent = val + (name ? ` (${name})` : '');
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        async function loadPaymentSettings() {
+            const r = await fetch('/api/payment-settings');
+            const d = await r.json();
+            if (d.success && d.settings) {
+                const s = d.settings;
+                document.getElementById('upiIdInput').value = s.upi_id || '';
+                document.getElementById('upiNameInput').value = s.upi_name || '';
+                const info = document.getElementById('currentPaymentInfo');
+                if (s.upi_id) {
+                    info.innerHTML = `UPI ID: <strong>${s.upi_id}</strong>${s.upi_name ? ` (${s.upi_name})` : ''}<br>QR: ${s.qr_image ? '✅ Uploaded' : '❌ Not set'}`;
+                } else {
+                    info.textContent = 'No payment settings configured yet';
+                }
+                if (s.qr_image) {
+                    const img = document.getElementById('qrPreviewImg');
+                    img.src = s.qr_image; img.style.display = 'block';
+                    document.getElementById('qrUploadPlaceholder').style.display = 'none';
+                }
+            }
+        }
+
+        document.getElementById('savePaymentBtn').addEventListener('click', async () => {
+            const upi_id   = document.getElementById('upiIdInput').value.trim();
+            const upi_name = document.getElementById('upiNameInput').value.trim();
+            if (!upi_id) { showPanelAlert('paymentAlert', 'Please enter a UPI ID'); return; }
+
+            const btn = document.getElementById('savePaymentBtn');
+            btn.textContent = 'Saving...'; btn.disabled = true;
+
+            const payload = { upi_id, upi_name };
+            if (qrBase64) payload.qr_image = qrBase64;
+
+            const r = await apiPost('/api/admin/payment-settings', payload);
+            btn.textContent = '💾 Save Payment Settings'; btn.disabled = false;
+
+            if (r.success) {
+                showPanelAlert('paymentAlert', r.message, 'success');
+                loadPaymentSettings();
+            } else {
+                showPanelAlert('paymentAlert', r.message);
+            }
+        });
+
+        // ─── Users ───────────────────────────────────────────────────
+        async function loadUsers() {
+            // We'll re-use stats to know user count, and show basic info
+            const r = await fetch('/api/admin/orders');
+            const d = await r.json();
+            if (!d.success) return;
+            // Extract unique users from orders
+            const seen = {};
+            const users = [];
+            d.orders.forEach(o => {
+                if (!seen[o.user_email]) {
+                    seen[o.user_email] = true;
+                    users.push({ name: o.user_name, email: o.user_email });
+                }
+            });
+            if (!users.length) {
+                document.getElementById('usersTableWrap').innerHTML = '<p style="padding:20px;color:var(--gray);">No users have placed orders yet</p>';
+                return;
+            }
+            let html = `<table><thead><tr><th>Name</th><th>Email</th><th>Orders</th></tr></thead><tbody>`;
+            users.forEach(u => {
+                const orderCount = d.orders.filter(o => o.user_email === u.email).length;
+                html += `<tr><td>${u.name}</td><td>${u.email}</td><td>${orderCount}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('usersTableWrap').innerHTML = html;
+        }
+
+        // ─── Add Order Panel ─────────────────────────────────────────
+        let adminCart = {}; // { productId: { ...product, qty } }
+
+        async function loadAddOrderPanel() {
+            const r = await fetch('/api/products');
+            const d = await r.json();
+            if (!d.success) return;
+            const picker = document.getElementById('orderItemPicker');
+            if (!d.products.length) {
+                picker.innerHTML = '<p style="color:var(--gray);font-size:13px;">No products available. Add some first.</p>';
+                return;
+            }
+            adminCart = {};
+            updateAdminOrderSummary();
+
+            picker.innerHTML = d.products.filter(p => p.available).map(p => `
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f5ede5;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span style="font-size:26px;">${p.emoji}</span>
+                        <div>
+                            <div style="font-weight:600;font-size:14px;">${p.name}</div>
+                            <div style="font-size:12px;color:var(--gray);">${p.category} &nbsp;·&nbsp; ₹${p.price}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <button onclick="changeAdminQty(${p.id}, -1)"
+                            style="width:28px;height:28px;border-radius:50%;border:2px solid #eaddd0;background:white;font-size:16px;font-weight:700;cursor:pointer;color:var(--primary);display:flex;align-items:center;justify-content:center;">−</button>
+                        <span id="admin-qty-${p.id}" style="font-weight:700;font-size:15px;min-width:22px;text-align:center;">0</span>
+                        <button onclick="changeAdminQty(${p.id}, 1, '${p.name.replace(/'/g,"\\'")}', ${p.price}, '${(p.emoji||'🍽️').replace(/'/g,"\\'")}' )"
+                            style="width:28px;height:28px;border-radius:50%;border:2px solid var(--primary);background:var(--primary);font-size:16px;font-weight:700;cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeAdminQty(id, delta, name, price, emoji) {
+            if (!adminCart[id] && delta > 0) {
+                adminCart[id] = { id, name, price, emoji, qty: 0 };
+            }
+            if (!adminCart[id]) return;
+            adminCart[id].qty += delta;
+            if (adminCart[id].qty <= 0) delete adminCart[id];
+            const span = document.getElementById(`admin-qty-${id}`);
+            if (span) span.textContent = adminCart[id] ? adminCart[id].qty : 0;
+            updateAdminOrderSummary();
+        }
+        window.changeAdminQty = changeAdminQty;
+
+        function updateAdminOrderSummary() {
+            const items = Object.values(adminCart);
+            const wrap  = document.getElementById('orderSummaryWrap');
+            const list  = document.getElementById('orderSummaryList');
+            const total = document.getElementById('orderSummaryTotal');
+            if (!items.length) { wrap.style.display = 'none'; return; }
+            wrap.style.display = 'block';
+            list.innerHTML = items.map(i => `
+                <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;">
+                    <span>${i.emoji} ${i.name} × ${i.qty}</span>
+                    <span style="font-weight:600;">₹${i.price * i.qty}</span>
+                </div>`).join('');
+            total.textContent = items.reduce((s, i) => s + i.price * i.qty, 0);
+        }
+
+        document.getElementById('placeAdminOrderBtn').addEventListener('click', async () => {
+            const name   = document.getElementById('oName').value.trim();
+            const email  = document.getElementById('oEmail').value.trim();
+            const status = document.getElementById('oStatus').value;
+            const utr    = document.getElementById('oUtr').value.trim();
+            const items  = Object.values(adminCart);
+
+            if (!name)         { showPanelAlert('addOrderAlert', 'Customer name is required'); return; }
+            if (!items.length) { showPanelAlert('addOrderAlert', 'Add at least one item'); return; }
+
+            const amount = items.reduce((s, i) => s + i.price * i.qty, 0);
+            const btn    = document.getElementById('placeAdminOrderBtn');
+            btn.textContent = 'Placing...'; btn.disabled = true;
+
+            const r = await apiPost('/api/admin/add-order', {
+                customer_name: name,
+                customer_email: email || '',
+                items,
+                amount,
+                status,
+                utr
+            });
+            btn.textContent = '✅ Place Order'; btn.disabled = false;
+
+            if (r.success) {
+                showPanelAlert('addOrderAlert', `Order #${r.order_id} placed for ${name}!`, 'success');
+                // reset form
+                document.getElementById('oName').value  = '';
+                document.getElementById('oEmail').value = '';
+                document.getElementById('oUtr').value   = '';
+                adminCart = {};
+                loadAddOrderPanel();
+            } else {
+                showPanelAlert('addOrderAlert', r.message);
+            }
+        });
+
+        // ─── Init ────────────────────────────────────────────────────
+        buildEmojiPicker();
+        loadDashboard();
+    </script>
+</body>
+</html>

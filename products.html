@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - DecoWindow</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🪟</span>
+                <span class="logo-text">Deco<span class="logo-accent">Window</span></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html" class="active">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">🛒 <span class="cart-count" id="cartCount">0</span></button>
+                <div class="hamburger" id="hamburger">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Our Collection</h1>
+            <p>Explore our curated selection of curtains and curtain rods</p>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="products-section">
+        <div class="container">
+            <div class="filter-bar">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All Products</button>
+                    <button class="filter-tab" data-filter="curtains">Curtains</button>
+                    <button class="filter-tab" data-filter="rods">Curtain Rods</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Search products...">
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Curtains -->
+                <div class="product-card" data-category="curtains">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&q=80" alt="Velvet Royale Curtains">
+                        <span class="product-badge">Bestseller</span>
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Velvet Royale Curtains" data-price="89.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Velvet Royale Curtains</h3>
+                        <p class="product-category">Luxury Velvet</p>
+                        <p class="product-price">$89.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="curtains">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="Linen Breeze Drapes">
+                        <span class="product-badge">New</span>
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Linen Breeze Drapes" data-price="64.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Linen Breeze Drapes</h3>
+                        <p class="product-category">Natural Linen</p>
+                        <p class="product-price">$64.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="curtains">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1567225557594-88d73e55f2cb?w=600&q=80" alt="Blackout Premium Curtains">
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Blackout Premium Curtains" data-price="74.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Blackout Premium</h3>
+                        <p class="product-category">Light Blocking</p>
+                        <p class="product-price">$74.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="curtains">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=600&q=80" alt="Sheer Pink Elegance">
+                        <span class="product-badge">Trending</span>
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Sheer Pink Elegance" data-price="44.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Sheer Pink Elegance</h3>
+                        <p class="product-category">Sheer Curtains</p>
+                        <p class="product-price">$44.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="curtains">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80" alt="Emerald Silk Curtains">
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Emerald Silk Curtains" data-price="119.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Emerald Silk</h3>
+                        <p class="product-category">Pure Silk</p>
+                        <p class="product-price">$119.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="curtains">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&q=80" alt="Ivory Lace Sheer">
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Ivory Lace Sheer" data-price="39.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Ivory Lace Sheer</h3>
+                        <p class="product-category">Decorative Lace</p>
+                        <p class="product-price">$39.99</p>
+                    </div>
+                </div>
+
+                <!-- Curtain Rods -->
+                <div class="product-card" data-category="rods">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600&q=80" alt="Bronze Designer Rod">
+                        <span class="product-badge">New</span>
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Bronze Designer Rod" data-price="49.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Bronze Designer Rod</h3>
+                        <p class="product-category">Antique Bronze</p>
+                        <p class="product-price">$49.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="rods">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=600&q=80" alt="Gold Crown Rod Set">
+                        <span class="product-badge">Premium</span>
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Gold Crown Rod Set" data-price="79.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Gold Crown Rod Set</h3>
+                        <p class="product-category">Brass Finish</p>
+                        <p class="product-price">$79.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="rods">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1558211583-d26f610c1eb1?w=600&q=80" alt="Silver Modern Rod">
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Silver Modern Rod" data-price="54.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Silver Modern Rod</h3>
+                        <p class="product-category">Stainless Steel</p>
+                        <p class="product-price">$54.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="rods">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?w=600&q=80" alt="Matte Black Rod">
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Matte Black Rod" data-price="42.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Matte Black Rod</h3>
+                        <p class="product-category">Iron Finish</p>
+                        <p class="product-price">$42.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="rods">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1604147706283-d7119b5b822c?w=600&q=80" alt="Wooden Classic Rod">
+                        <span class="product-badge">Eco</span>
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Wooden Classic Rod" data-price="59.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Wooden Classic Rod</h3>
+                        <p class="product-category">Solid Oak</p>
+                        <p class="product-price">$59.99</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="rods">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1584652858813-77d0a8a7ef27?w=600&q=80" alt="Copper Vintage Rod">
+                        <div class="product-overlay">
+                            <button class="quick-add" data-product="Copper Vintage Rod" data-price="69.99">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Copper Vintage Rod</h3>
+                        <p class="product-category">Brushed Copper</p>
+                        <p class="product-price">$69.99</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3 class="footer-logo">🪟 Deco<span class="logo-accent">Window</span></h3>
+                    <p>Premium curtains and curtain rods that transform every window into a statement.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">Curtains</a></li>
+                        <li><a href="products.html">Curtain Rods</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>📞 +91 98765 43210</li>
+                        <li>✉️ hello@decowindow.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 DecoWindow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="closeCart">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: $<span id="cartTotal">0.00</span></div>
+            <button class="btn btn-primary cart-checkout">Checkout</button>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#e67e22">
+    <title>Checkout - SnackZone</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { background: #f0f2f5; }
+        .checkout-header {
+            background: linear-gradient(135deg, #e67e22, #ca6f1e);
+            color: white; padding: 14px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .checkout-header .brand { font-size: 17px; font-weight: 700; }
+        .back-btn {
+            background: rgba(255,255,255,0.2); color: white; border: none;
+            padding: 8px 14px; border-radius: 20px; cursor: pointer;
+            font-family: inherit; font-size: 13px; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center;
+            min-height: 38px; transition: background 0.2s;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.3); }
+        .steps {
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; margin-bottom: 20px; font-size: 12px; font-weight: 600;
+            flex-wrap: nowrap; overflow-x: auto; padding: 4px 0;
+        }
+        .step {
+            padding: 7px 14px; border-radius: 20px;
+            background: #e2e8f0; color: #666; white-space: nowrap;
+            font-size: 12px;
+        }
+        .step.active { background: var(--primary); color: white; }
+        .step.done   { background: var(--success);  color: white; }
+        .alert { padding:11px 14px; border-radius:10px; margin-bottom:14px; font-size:13px; display:none; }
+        .alert.show  { display:block; }
+        .alert.error   { background:#fde2e2; color:#c0392b; border-left:4px solid #c0392b; }
+        .alert.success { background:#d4f4dd; color:#1e7e34; border-left:4px solid #1e7e34; }
+        .success-screen {
+            text-align:center; padding:40px 20px; display:none;
+            background:white; border-radius:16px; box-shadow:var(--shadow);
+            max-width:480px; margin:30px auto;
+        }
+        .success-screen .big-icon { font-size:64px; margin-bottom:14px; }
+        .success-screen h2 { font-size:24px; margin-bottom:8px; color:var(--success); }
+        .success-screen p  { color:var(--gray); margin-bottom:14px; font-size:14px; }
+        .instructions {
+            background:#fff3e0; border-radius:10px; padding:14px;
+            margin:14px 0; text-align:left; font-size:13px;
+            border-left:4px solid var(--accent);
+        }
+        .instructions ol { padding-left:16px; }
+        .instructions li  { margin-bottom:5px; }
+        @media (min-width:768px) {
+            .checkout-header .brand { font-size:20px; }
+            .back-btn { font-size:14px; padding:8px 18px; }
+            .steps { font-size:14px; }
+            .step  { padding:8px 20px; font-size:14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-header">
+        <div class="brand">🍔 SnackZone — Checkout</div>
+        <a href="/" class="back-btn">← Back to Menu</a>
+    </div>
+
+    <div class="checkout-body">
+        <div class="steps">
+            <div class="step done" id="step1">1. Cart</div>
+            <span>→</span>
+            <div class="step active" id="step2">2. Review Order</div>
+            <span>→</span>
+            <div class="step" id="step3">3. Pay via UPI</div>
+        </div>
+
+        <div id="alert" class="alert"></div>
+
+        <!-- Order Review + UPI Payment -->
+        <div class="checkout-wrap" id="checkoutWrap">
+            <!-- Order Summary -->
+            <div class="checkout-card">
+                <h2>📋 Order Summary</h2>
+                <div id="orderItemsList">
+                    <p style="color:var(--gray);text-align:center;padding:20px;">Your cart is empty</p>
+                </div>
+                <hr class="order-divider">
+                <div class="order-total">
+                    <span>Total Amount</span>
+                    <span>₹<span id="orderTotal">0</span></span>
+                </div>
+            </div>
+
+            <!-- UPI Payment -->
+            <div class="checkout-card">
+                <h2>💳 Pay via UPI</h2>
+
+                <div class="instructions">
+                    <strong>How to pay:</strong>
+                    <ol>
+                        <li>Scan the QR code below <strong>OR</strong> copy the UPI ID</li>
+                        <li>Enter the exact amount shown</li>
+                        <li>Complete payment in your UPI app</li>
+                        <li>Enter the UTR / Transaction ID below</li>
+                        <li>Click "Place Order"</li>
+                    </ol>
+                </div>
+
+                <div class="upi-section">
+                    <div class="qr-container" id="qrContainer">
+                        <div class="qr-placeholder" id="qrPlaceholder">
+                            <div class="qr-icon">📷</div>
+                            <p>QR code not set</p>
+                            <p style="font-size:11px;">Contact admin</p>
+                        </div>
+                        <img id="qrImage" src="" alt="UPI QR Code" style="display:none;">
+                    </div>
+
+                    <div class="upi-id-box" id="upiIdBox" onclick="copyUpiId()" title="Click to copy">
+                        <span id="upiIdText">Loading...</span>
+                        <span class="copy-hint">📋 tap to copy</span>
+                    </div>
+
+                    <div class="utr-input-wrap">
+                        <label for="utrInput">UTR / Transaction ID <span style="color:var(--danger);">*</span></label>
+                        <input type="text" id="utrInput" placeholder="Enter 12-digit UTR number after payment">
+                    </div>
+
+                    <button class="btn btn-primary place-order-btn" id="placeOrderBtn">
+                        ✅ Place Order
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="success-screen" id="successScreen">
+            <div class="big-icon">🎉</div>
+            <h2>Order Placed!</h2>
+            <p>Your order has been sent to the cafeteria. They will prepare your snacks shortly.</p>
+            <p style="font-size:13px;color:#999;">Order ID: <strong id="successOrderId">—</strong></p>
+            <a href="/" class="btn btn-primary" style="margin-top:16px;">← Back to Menu</a>
+        </div>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('snackCart')) || [];
+        let paymentSettings = {};
+
+        // Load payment settings
+        async function loadPaymentSettings() {
+            try {
+                const res = await fetch('/api/payment-settings');
+                const data = await res.json();
+                if (data.success) {
+                    paymentSettings = data.settings;
+                    const upiText = document.getElementById('upiIdText');
+                    if (paymentSettings.upi_id) {
+                        upiText.textContent = paymentSettings.upi_id;
+                        if (paymentSettings.upi_name) {
+                            upiText.textContent += ` (${paymentSettings.upi_name})`;
+                        }
+                    } else {
+                        upiText.textContent = 'UPI ID not set — contact admin';
+                    }
+                    if (paymentSettings.qr_image) {
+                        document.getElementById('qrPlaceholder').style.display = 'none';
+                        const img = document.getElementById('qrImage');
+                        img.src = paymentSettings.qr_image;
+                        img.style.display = 'block';
+                    }
+                }
+            } catch(e) {
+                document.getElementById('upiIdText').textContent = 'Could not load UPI settings';
+            }
+        }
+
+        function copyUpiId() {
+            const id = paymentSettings.upi_id;
+            if (!id) return;
+            navigator.clipboard.writeText(id).then(() => {
+                showAlert('UPI ID copied to clipboard! ✓', 'success');
+            });
+        }
+
+        function renderOrder() {
+            const list = document.getElementById('orderItemsList');
+            if (!cart.length) {
+                list.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px;">Cart is empty — <a href="/">go back to menu</a></p>';
+                document.getElementById('placeOrderBtn').disabled = true;
+                return;
+            }
+            let html = '';
+            let total = 0;
+            cart.forEach(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                html += `
+                    <div class="order-item">
+                        <div class="order-item-left">
+                            <span class="order-item-emoji">${item.emoji || '🍽️'}</span>
+                            <div>
+                                <div class="order-item-name">${item.name}</div>
+                                <div class="order-item-qty">Qty: ${item.qty} × ₹${item.price}</div>
+                            </div>
+                        </div>
+                        <div class="order-item-price">₹${subtotal}</div>
+                    </div>`;
+            });
+            list.innerHTML = html;
+            document.getElementById('orderTotal').textContent = total;
+        }
+
+        function showAlert(msg, type = 'error') {
+            const box = document.getElementById('alert');
+            box.textContent = msg;
+            box.className = `alert show ${type}`;
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        document.getElementById('placeOrderBtn').addEventListener('click', async () => {
+            const utr = document.getElementById('utrInput').value.trim();
+            if (!utr) { showAlert('Please enter your UTR / Transaction ID after making the payment.'); return; }
+            if (!cart.length) { showAlert('Your cart is empty.'); return; }
+
+            const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const btn = document.getElementById('placeOrderBtn');
+            btn.textContent = 'Placing order...'; btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: cart, amount: total, utr })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.removeItem('snackCart');
+                    document.getElementById('checkoutWrap').style.display = 'none';
+                    document.querySelector('.steps').style.display = 'none';
+                    document.getElementById('alert').style.display = 'none';
+                    const ss = document.getElementById('successScreen');
+                    ss.style.display = 'block';
+                    document.getElementById('successOrderId').textContent = data.order_id;
+                    document.getElementById('step2').className = 'step done';
+                    document.getElementById('step3').className = 'step done';
+                } else {
+                    showAlert(data.message || 'Something went wrong');
+                    btn.textContent = '✅ Place Order'; btn.disabled = false;
+                }
+            } catch(e) {
+                showAlert('Network error. Please try again.');
+                btn.textContent = '✅ Place Order'; btn.disabled = false;
+            }
+        });
+
+        // Init
+        renderOrder();
+        loadPaymentSettings();
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - DecoWindow</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🪟</span>
+                <span class="logo-text">Deco<span class="logo-accent">Window</span></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">🛒 <span class="cart-count" id="cartCount">0</span></button>
+                <div class="hamburger" id="hamburger">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>About DecoWindow</h1>
+            <p>Crafting beautiful windows since 2010</p>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <p class="section-tag">Our Story</p>
+                    <h2>Where Style Meets Comfort</h2>
+                    <p>DecoWindow was born from a simple belief — every window deserves to tell a story. What started as a small family workshop in Mumbai has grown into a trusted name in window decor across India.</p>
+                    <p>We work with master craftsmen and the finest textile mills to bring you curtains and curtain rods that combine timeless elegance with modern durability. Every piece is curated with care.</p>
+                    <div class="about-stats">
+                        <div><h3>15+</h3><p>Years of Excellence</p></div>
+                        <div><h3>10K+</h3><p>Happy Homes</p></div>
+                        <div><h3>50+</h3><p>Cities Served</p></div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="about-img-box" style="background: linear-gradient(135deg, #d4a574, #8b5a3c);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="values-section">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">Our Values</p>
+                <h2>What We Stand For</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h3>Quality First</h3>
+                    <p>Every product passes rigorous quality checks before reaching your home.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3>Sustainable</h3>
+                    <p>Eco-friendly fabrics and responsibly sourced materials.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">❤️</div>
+                    <h3>Customer Love</h3>
+                    <p>Your satisfaction is our greatest achievement.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Craftsmanship</h3>
+                    <p>Handmade with precision by skilled artisans.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">Our Team</p>
+                <h2>Meet the Makers</h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar" style="background: linear-gradient(135deg, #d4a574, #8b5a3c);">UR</div>
+                    <h3>Umang R.</h3>
+                    <p>Founder & Creative Director</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar" style="background: linear-gradient(135deg, #6b7e8e, #3e4e5e);">PM</div>
+                    <h3>Priya M.</h3>
+                    <p>Head of Design</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar" style="background: linear-gradient(135deg, #c9b037, #8b6914);">AK</div>
+                    <h3>Arjun K.</h3>
+                    <p>Production Lead</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 DecoWindow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="closeCart">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: $<span id="cartTotal">0.00</span></div>
+            <button class="btn btn-primary cart-checkout">Checkout</button>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

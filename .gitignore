@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+env/
+
+# Data files with user info — do not commit
+users.xlsx
+orders.xlsx
+products.xlsx
+payment_settings.json
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

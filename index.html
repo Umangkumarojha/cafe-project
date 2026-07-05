@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#e67e22">
+    <title>SnackZone - Office Cafeteria</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-icon">🍔</span>
+                <span class="logo-text">Snack<span class="logo-accent">Zone</span></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="active">Menu</a></li>
+                <li><a href="#" id="myOrdersLink">My Orders</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+                <div id="userBadgeWrap"></div>
+                <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <h1>🍽️ Today's Cafeteria Menu</h1>
+        <p id="greetingText">Good morning! What are you craving today?</p>
+        <span class="hero-tag">🏢 Office Cafeteria · Fresh & Hot</span>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu-section">
+        <div class="container">
+            <div class="category-tabs" id="categoryTabs">
+                <button class="cat-tab active" data-cat="all">All Items</button>
+            </div>
+            <div class="products-grid" id="productsGrid">
+                <div style="text-align:center;grid-column:1/-1;padding:50px;color:var(--gray);">
+                    Loading menu...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>🍔 SnackZone — Office Cafeteria &nbsp;|&nbsp; <a href="#">Contact Cafeteria</a></p>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>🛒 Your Order</h3>
+            <button class="close-cart" id="closeCart">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">🍽️ Add items to start your order</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: <span>₹<span id="cartTotal">0</span></span></div>
+            <button class="btn btn-primary cart-checkout" id="checkoutBtn">Proceed to Pay →</button>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- My Orders Modal -->
+    <div id="ordersModal" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
+        <div style="background:white;border-radius:16px;padding:28px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;position:relative;">
+            <button onclick="document.getElementById('ordersModal').style.display='none'"
+                style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;">✕</button>
+            <h2 style="margin-bottom:20px;">📋 My Orders</h2>
+            <div id="myOrdersList"><p style="color:var(--gray);text-align:center;padding:30px;">Loading...</p></div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
